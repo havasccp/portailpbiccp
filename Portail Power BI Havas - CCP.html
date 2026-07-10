@@ -1,0 +1,951 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail Power BI | Havas</title>
+    <style>
+        /* ============================================
+           VARIABLES & RESET
+           ============================================ */
+        :root {
+            --color-bg: #FAFAFA;
+            --color-surface: #FFFFFF;
+            --color-border: #F0F0F0;
+            --color-border-hover: #E5E5E5;
+            --color-text-primary: #1A1A1A;
+            --color-text-secondary: #6B6B6B;
+            --color-text-tertiary: #9B9B9B;
+            --color-accent: #0066FF;
+            --color-accent-light: #F0F6FF;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(250, 250, 250, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+            gap: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--color-accent), #0052CC);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-text span {
+            color: var(--color-text-tertiary);
+            font-weight: 400;
+        }
+
+        /* ============================================
+           SEARCH BAR
+           ============================================ */
+        .search-wrapper {
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px 0 48px;
+            border: 1px solid var(--color-border);
+            border-radius: 22px;
+            background: var(--color-surface);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--color-text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-tertiary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px var(--color-accent-light);
+        }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main {
+            padding: 48px 0 80px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+        }
+
+        /* ============================================
+           CATEGORY FILTERS
+           ============================================ */
+        .filters {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            height: 36px;
+            padding: 0 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 18px;
+            background: var(--color-surface);
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--color-border-hover);
+            background: var(--color-bg);
+        }
+
+        .filter-btn.active {
+            background: var(--color-text-primary);
+            border-color: var(--color-text-primary);
+            color: white;
+        }
+
+        .filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            margin-left: 6px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.08);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ============================================
+           REPORTS GRID
+           ============================================ */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* ============================================
+           REPORT CARD
+           ============================================ */
+        .report-card {
+            position: relative;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .report-card:hover {
+            border-color: var(--color-border-hover);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .report-card:nth-child(1) { animation-delay: 0.05s; }
+        .report-card:nth-child(2) { animation-delay: 0.1s; }
+        .report-card:nth-child(3) { animation-delay: 0.15s; }
+        .report-card:nth-child(4) { animation-delay: 0.2s; }
+        .report-card:nth-child(5) { animation-delay: 0.25s; }
+        .report-card:nth-child(6) { animation-delay: 0.3s; }
+        .report-card:nth-child(7) { animation-delay: 0.35s; }
+        .report-card:nth-child(8) { animation-delay: 0.4s; }
+        .report-card:nth-child(9) { animation-delay: 0.45s; }
+        .report-card:nth-child(10) { animation-delay: 0.5s; }
+        .report-card:nth-child(11) { animation-delay: 0.55s; }
+        .report-card:nth-child(12) { animation-delay: 0.6s; }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-bg);
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .card-icon.ccp { 
+            background: #FEF3C7; 
+            color: #D97706;
+        }
+        .card-icon.ecselis { 
+            background: #D1FAE5; 
+            color: #059669;
+        }
+        .card-icon.forward { 
+            background: #DBEAFE; 
+            color: #2563EB;
+        }
+        .card-icon.havas-programmatic-hub { 
+            background: #F3E8FF; 
+            color: #7C3AED;
+        }
+        .card-icon.pilot { 
+            background: #FFE4E6; 
+            color: #E11D48;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            margin-bottom: 8px;
+            color: var(--color-text-primary);
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 42px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .card-category {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-accent);
+            transition: gap var(--transition-fast);
+        }
+
+        .report-card:hover .card-action {
+            gap: 8px;
+        }
+
+        .card-action svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ============================================
+           FAVORITE BUTTON
+           ============================================ */
+        .favorite-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all var(--transition-fast);
+        }
+
+        .report-card:hover .favorite-btn {
+            opacity: 1;
+        }
+
+        .favorite-btn:hover {
+            background: var(--color-bg);
+        }
+
+        .favorite-btn svg {
+            width: 18px;
+            height: 18px;
+            color: var(--color-text-tertiary);
+            transition: all var(--transition-fast);
+        }
+
+        .favorite-btn.active svg {
+            color: #F59E0B;
+            fill: #F59E0B;
+        }
+
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: var(--color-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--color-text-tertiary);
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           STATS BAR
+           ============================================ */
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .stats-text {
+            font-size: 13px;
+            color: var(--color-text-tertiary);
+        }
+
+        .stats-text strong {
+            color: var(--color-text-primary);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .header-content {
+                height: auto;
+                padding: 16px 0;
+                flex-wrap: wrap;
+            }
+
+            .search-wrapper {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+                margin-top: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 8px;
+                margin-bottom: 24px;
+            }
+
+            .filters::-webkit-scrollbar {
+                display: none;
+            }
+
+            .main {
+                padding: 32px 0 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .report-card {
+                padding: 20px;
+            }
+
+            .logo-text span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         HEADER
+         ============================================ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">PBI</div>
+                    <div class="logo-text">Power BI <span>Portal</span></div>
+                </a>
+
+                <div class="search-wrapper">
+                    <div class="search-bar">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput"
+                            placeholder="Rechercher un rapport..."
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Tableaux de bord</h1>
+                <p class="page-subtitle">Accédez à tous vos rapports Power BI en un clic</p>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="filters" id="filters">
+                <!-- Dynamically generated -->
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <span class="stats-text" id="statsText">
+                    <strong>0</strong> rapports
+                </span>
+            </div>
+
+            <!-- Reports Grid -->
+            <div class="reports-grid" id="reportsGrid">
+                <!-- Dynamically generated -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+                <h3 class="empty-state-title">Aucun rapport trouvé</h3>
+                <p class="empty-state-text">
+                    Essayez de modifier vos critères de recherche ou sélectionnez une autre catégorie.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        /* ============================================
+           ICONS SVG
+           ============================================ */
+        const icons = {
+            chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M18 17V9"/>
+                <path d="M13 17V5"/>
+                <path d="M8 17v-3"/>
+            </svg>`,
+            analytics: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 21H4.6c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3 20.24 3 19.96 3 19.4V3"/>
+                <path d="m7 14 4-4 4 4 6-6"/>
+            </svg>`,
+            dashboard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="9" rx="1"/>
+                <rect x="14" y="3" width="7" height="5" rx="1"/>
+                <rect x="14" y="12" width="7" height="9" rx="1"/>
+                <rect x="3" y="16" width="7" height="5" rx="1"/>
+            </svg>`,
+            report: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>`,
+            radar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+                <path d="M12 2v4"/>
+                <path d="M12 18v4"/>
+            </svg>`,
+            billing: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="M6 8h.01"/>
+                <path d="M10 8h.01"/>
+                <path d="M14 8h.01"/>
+                <path d="M6 12h12"/>
+                <path d="M6 16h8"/>
+            </svg>`
+        };
+
+        /* ============================================
+           DATA - VOS RAPPORTS POWER BI
+           ============================================ */
+        const reports = [
+            {
+                id: 1,
+                title: "360 SOLUTIONS",
+                category: "CCP",
+                description: "Analyse des litiges déclarés sur Media360.",
+                icon: "chart",
+                url: "https://app.powerbi.com/links/GNZ0CrLOGw?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 2,
+                title: "INV TRACKER",
+                category: "CCP",
+                description: "Analyse des insertions non validées.",
+                icon: "analytics",
+                url: "https://app.powerbi.com/links/NQRk3CeEuy?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 3,
+                title: "SPOT CHECK",
+                category: "CCP",
+                description: "Contrôle et vérification des spots publicitaires.",
+                icon: "dashboard",
+                url: "https://app.powerbi.com/links/8QWaMPmVc3?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 4,
+                title: "ECSELIS BILLING TRACKER",
+                category: "Ecselis",
+                description: "Suivi de la facturation Ecselis.",
+                icon: "billing",
+                url: "https://app.powerbi.com/links/wJVKUzZO5y?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 5,
+                title: "HMK BILLING CONTROL",
+                category: "Ecselis",
+                description: "Contrôle de la facturation HMK.",
+                icon: "billing",
+                url: "https://app.powerbi.com/links/iFR6ZF1Qhi?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 6,
+                title: "360 SOLUTIONS by Forward",
+                category: "Forward",
+                description: "Analyse des litiges déclarés sur Media360 sur l'entité Forward.",
+                icon: "chart",
+                url: "https://app.powerbi.com/links/lmAKEZJLzh?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 7,
+                title: "INV TRACKER by Forward",
+                category: "Forward",
+                description: "Analyse des insertions non validées sur l'entité Forward.",
+                icon: "analytics",
+                url: "https://app.powerbi.com/links/ovZwk8Cq1l?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 8,
+                title: "LVMH DASHBOARD & REPORTING",
+                category: "Forward",
+                description: "Tableau de bord et reporting dédié LVMH.",
+                icon: "dashboard",
+                url: "https://app.powerbi.com/links/9t9EkpX0B9?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 9,
+                title: "RADAR HPH",
+                category: "Havas Programmatic Hub",
+                description: "Suivi des actions attendues pour préparer aux mieux la clôture de la régie Havas Programmatic Hub.",
+                icon: "radar",
+                url: "https://app.powerbi.com/links/pv25JrrxMO?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 10,
+                title: "RADAR HPH : Rate Card",
+                category: "Havas Programmatic Hub",
+                description: "Contrôle de l'application des taux contractuel sur la régie Havas Programmatic Hub.",
+                icon: "radar",
+                url: "https://app.powerbi.com/links/vB0k7HMYP8?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 11,
+                title: "SOCFLOW Suivi factu social",
+                category: "Havas Programmatic Hub",
+                description: "Suivi de la facturation sociale.",
+                icon: "billing",
+                url: "https://app.powerbi.com/links/u0I0r3VBNf?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            },
+            {
+                id: 12,
+                title: "BOOK PILOT",
+                category: "Pilot",
+                description: "Tableau de bord principal Pilot.",
+                icon: "report",
+                url: "https://app.powerbi.com/links/5Wi066rhml?ctid=c7ed5557-a5c8-4435-9fab-ada7abcdc01b&pbi_source=linkShare",
+                isFavorite: false
+            }
+        ];
+
+        /* ============================================
+           CATEGORIES
+           ============================================ */
+        const categories = ["Tous", ...new Set(reports.map(r => r.category))];
+
+        /* ============================================
+           STATE
+           ============================================ */
+        let currentCategory = "Tous";
+        let searchQuery = "";
+        let favorites = new Set(
+            reports.filter(r => r.isFavorite).map(r => r.id)
+        );
+
+        /* ============================================
+           DOM ELEMENTS
+           ============================================ */
+        const filtersContainer = document.getElementById("filters");
+        const reportsGrid = document.getElementById("reportsGrid");
+        const searchInput = document.getElementById("searchInput");
+        const emptyState = document.getElementById("emptyState");
+        const statsText = document.getElementById("statsText");
+
+        /* ============================================
+           RENDER FILTERS
+           ============================================ */
+        function renderFilters() {
+            filtersContainer.innerHTML = categories.map(cat => {
+                const count = cat === "Tous" 
+                    ? reports.length 
+                    : reports.filter(r => r.category === cat).length;
+                
+                return `
+                    <button 
+                        class="filter-btn ${currentCategory === cat ? 'active' : ''}"
+                        data-category="${cat}"
+                    >
+                        ${cat}
+                        <span class="filter-count">${count}</span>
+                    </button>
+                `;
+            }).join("");
+
+            filtersContainer.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    currentCategory = btn.dataset.category;
+                    renderFilters();
+                    renderReports();
+                });
+            });
+        }
+
+        /* ============================================
+           RENDER REPORTS
+           ============================================ */
+        function renderReports() {
+            let filtered = reports.filter(report => {
+                const matchesCategory = currentCategory === "Tous" || 
+                                       report.category === currentCategory;
+                const matchesSearch = searchQuery === "" ||
+                    report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    report.category.toLowerCase().includes(searchQuery.toLowerCase());
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            statsText.innerHTML = `<strong>${filtered.length}</strong> rapport${filtered.length > 1 ? 's' : ''}`;
+
+            if (filtered.length === 0) {
+                reportsGrid.style.display = "none";
+                emptyState.style.display = "block";
+                return;
+            } else {
+                reportsGrid.style.display = "grid";
+                emptyState.style.display = "none";
+            }
+
+            reportsGrid.innerHTML = filtered.map((report, index) => {
+                const categoryClass = report.category
+                    .toLowerCase()
+                    .replace(/\s+/g, '-');
+                
+                return `
+                    <article 
+                        class="report-card" 
+                        data-id="${report.id}"
+                        style="animation-delay: ${index * 0.05}s"
+                        onclick="openReport('${report.url}')"
+                    >
+                        <button 
+                            class="favorite-btn ${favorites.has(report.id) ? 'active' : ''}"
+                            onclick="event.stopPropagation(); toggleFavorite(${report.id})"
+                            aria-label="Ajouter aux favoris"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </button>
+                        
+                        <div class="card-header">
+                            <div class="card-icon ${categoryClass}">
+                                ${icons[report.icon] || icons.chart}
+                            </div>
+                        </div>
+                        
+                        <h3 class="card-title">${report.title}</h3>
+                        <p class="card-description">${report.description}</p>
+                        
+                        <div class="card-footer">
+                            <span class="card-category">${report.category}</span>
+                            <span class="card-action">
+                                Ouvrir
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        /* ============================================
+           OPEN REPORT
+           ============================================ */
+        function openReport(url) {
+            window.open(url, '_blank');
+        }
+
+        /* ============================================
+           TOGGLE FAVORITE
+           ============================================ */
+        function toggleFavorite(id) {
+            if (favorites.has(id)) {
+                favorites.delete(id);
+            } else {
+                favorites.add(id);
+            }
+            renderReports();
+        }
+
+        /* ============================================
+           SEARCH HANDLER
+           ============================================ */
+        searchInput.addEventListener("input", (e) => {
+            searchQuery = e.target.value;
+            renderReports();
+        });
+
+        /* ============================================
+           KEYBOARD SHORTCUT
+           ============================================ */
+        document.addEventListener("keydown", (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        /* ============================================
+           INIT
+           ============================================ */
+        function init() {
+            renderFilters();
+            renderReports();
+        }
+
+        init();
+    </script>
+</body>
+</html>
